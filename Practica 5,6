@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 
 
@@ -322,3 +323,377 @@ class Program
     }
 }
 */
+
+//Practica 8//
+
+
+/*
+class Animal
+{
+    public virtual void Speak() => Console.WriteLine("Animal speaks");
+}
+
+class Dog : Animal
+{
+    public override void Speak() => Console.WriteLine("Bark");
+}
+
+class Cat : Animal
+{
+    public override void Speak() => Console.WriteLine("Meow");
+}
+
+class Program
+{
+    // Ковариантный делегат
+    public delegate T AnimalFunc<out T>();
+
+    // Контравариантный делегат
+    public delegate void AnimalAction<in T>(T animal);
+
+    static void Main()
+    {
+        // Ковариантность
+        AnimalFunc<Animal> getDog = () => new Dog();
+        Animal dog = getDog(); // Возвращаем Dog как Animal
+        dog.Speak();
+
+        // Контравариантность
+        AnimalAction<Animal> actAnimal = animal => animal.Speak();
+        AnimalAction<Dog> actDog = actAnimal; // Присваиваем с явным преобразованием
+        actDog(new Dog()); // Вызываем метод с Dog
+    }
+}
+*/
+
+/*
+class Animal
+{
+    public virtual void Speak() => Console.WriteLine("Animal speaks");
+}
+
+class Dog : Animal
+{
+    public override void Speak() => Console.WriteLine("Bark");
+}
+
+class Cat : Animal
+{
+    public override void Speak() => Console.WriteLine("Meow");
+}
+
+class Program
+{
+    public delegate T AnimalProducer<out T>();
+    public delegate void AnimalAction<in T>(T a);
+
+    public delegate void AnimalHandler<in T>(T animal);
+
+    static void Main()
+    {
+        List<Animal> zooAnimals = new List<Animal> { new Dog(), new Cat() };
+
+        AnimalProducer<Animal> getAnimal = () => new Dog();
+        Animal animalInstance = getAnimal();
+        animalInstance.Speak();
+
+        AnimalAction<Animal> actAnimal = a => a.Speak();
+        AnimalAction<Dog> actDog = actAnimal;
+        actDog(new Dog());
+
+        AnimalHandler<Animal> handleAnimal = a => a.Speak();
+        HandleAnimals(zooAnimals, handleAnimal);
+    }
+
+    static void HandleAnimals<T>(List<T> animals, AnimalHandler<T> handler)
+    {
+        foreach (var a in animals)
+        {
+            handler(a);
+        }
+    }
+}
+*/
+
+
+//Practica 9//
+
+
+/*
+abstract class BaseArray
+{
+    protected int[] array;
+
+    public BaseArray(int size)
+    {
+        array = new int[size];
+    }
+
+    public int Size => array.Length;
+
+    public abstract void Display();
+
+    public int this[int index]
+    {
+        get => array[index];
+        set => array[index] = value;
+    }
+}
+
+class DerivedArray : BaseArray
+{
+    public DerivedArray(int size) : base(size) { }
+
+    public override void Display()
+    {
+        Console.WriteLine("Array contents:");
+        for (int i = 0; i < Size; i++)
+        {
+            Console.Write(array[i] + " ");
+        }
+        Console.WriteLine();
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        DerivedArray myArray = new DerivedArray(5);
+        for (int i = 0; i < myArray.Size; i++)
+        {
+            myArray[i] = i * 10; // Присваиваем значения
+        }
+
+        myArray.Display(); // Отображаем содержимое 
+    }
+}
+*/
+
+
+
+
+
+/*
+interface ICalculator
+{
+    int Calculate(int multiplier);
+}
+
+abstract class BaseClass
+{
+    protected int field1;
+    protected int field2;
+
+    public BaseClass(int value1, int value2)
+    {
+        field1 = value1;
+        field2 = value2;
+    }
+
+    public abstract int this[int index] { get; set; }
+}
+
+class DerivedClass : BaseClass, ICalculator
+{
+    public DerivedClass(int value1, int value2) : base(value1, value2) { }
+
+    public override int this[int index]
+    {
+        get => index % 2 == 0 ? field1 : field2;
+        set
+        {
+            if (index % 2 == 0)
+                field1 = value;
+            else
+                field2 = value;
+        }
+    }
+
+    public int Calculate(int multiplier)
+    {
+        return (field1 + field2) * multiplier;
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        DerivedClass obj = new DerivedClass(5, 10);
+
+        // Пример использования индексатора
+        Console.WriteLine(obj[0]); 
+        Console.WriteLine(obj[1]); 
+
+        // Пример использования метода
+        int result = obj.Calculate(2);
+        Console.WriteLine(result); 
+    }
+}
+*/
+
+
+
+/*
+abstract class BaseClass
+{
+    public abstract int Property { get; set; }
+    
+    public abstract int this[int index] { get; set; }
+    
+    public abstract void Display();
+}
+
+interface IProperty
+{
+    int Property { get; set; }
+}
+
+interface IIndexer
+{
+    int this[int index] { get; set; }
+}
+
+class DerivedClass : BaseClass, IProperty, IIndexer
+{
+    private int _value;
+    private int[] _array = new int[5];
+
+    public override int Property
+    {
+        get => _value;
+        set => _value = value;
+    }
+
+    public override int this[int index]
+    {
+        get => _array[index];
+        set => _array[index] = value;
+    }
+
+    public override void Display()
+    {
+        Console.WriteLine($"Property: {Property}");
+        for (int i = 0; i < _array.Length; i++)
+        {
+            Console.WriteLine($"Index {i}: {_array[i]}");
+        }
+    }
+
+    int IProperty.Property
+    {
+        get => Property;
+        set => Property = value;
+    }
+
+    int IIndexer.this[int index]
+    {
+        get => this[index];
+        set => this[index] = value;
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        DerivedClass obj = new DerivedClass();
+        
+        obj.Property = 10;
+        for (int i = 0; i < 5; i++)
+        {
+            obj[i] = i * 2;
+        }
+
+        obj.Display();
+
+        IProperty propInterface = obj;
+        propInterface.Property = 20;
+        IIndexer indexerInterface = obj;
+        indexerInterface[0] = 111;
+
+        Console.WriteLine("\nThrough interface:");
+        Console.WriteLine($"Property: {propInterface.Property}");
+        Console.WriteLine($"Index 0: {indexerInterface[0]}");
+    }
+}
+*/
+
+
+
+//Practica 15//
+
+
+/*
+class Program
+{
+    static void Main()
+    {
+        // 1. Вычисление гипотенузы
+        double a = 3, b = 4;
+        Console.WriteLine($"Гипотенуза: {CalculateHypotenuse(a, b)}");
+
+        // 2. Округление чисел
+        double number = 5.7;
+        Console.WriteLine($"Округление вверх: {RoundUp(number)}");
+        Console.WriteLine($"Округление вниз: {RoundDown(number)}");
+
+        // 3. Тригонометрические функции
+        double angleInDegrees = 30;
+        CalculateTrigonometricFunctions(angleInDegrees);
+
+        // 4. Генератор случайных чисел
+        GenerateRandomNumbers();
+
+        // 5. Минимум и максимум
+        int[] numbers = { 10, 25, 5, 100, 50 };
+        var (min, max) = FindMinMax(numbers);
+        Console.WriteLine($"Минимум: {min}, Максимум: {max}");
+    }
+
+    static double CalculateHypotenuse(double a, double b)
+    {
+        return Math.Sqrt(Math.Pow(a, 2) + Math.Pow(b, 2));
+    }
+
+    static double RoundUp(double number)
+    {
+        return Math.Ceiling(number);
+    }
+
+    static double RoundDown(double number)
+    {
+        return Math.Floor(number);
+    }
+
+    static void CalculateTrigonometricFunctions(double degrees)
+    {
+        double radians = degrees * (Math.PI / 180);
+        Console.WriteLine($"Синус: {Math.Sin(radians)}, Косинус: {Math.Cos(radians)}, Тангенс: {Math.Tan(radians)}");
+    }
+
+    static void GenerateRandomNumbers()
+    {
+        Random random = new Random();
+        Console.WriteLine("Случайные числа:");
+        for (int i = 0; i < 10; i++)
+        {
+            Console.WriteLine(random.Next(1, 101));
+        }
+    }
+
+    static (int, int) FindMinMax(int[] numbers)
+    {
+        int min = numbers[0], max = numbers[0];
+        foreach (var number in numbers)
+        {
+            min = Math.Min(min, number);
+            max = Math.Max(max, number);
+        }
+        return (min, max);
+    }
+}
+*/
+
+Работц выполнили Усенко Дмитрий(ИП-22) и Козин Андрей(ИП-21)
