@@ -1408,7 +1408,806 @@ class Program
 
 
 
-
-
-
 Работу выполнили Усенко Дмитрий(закрыл 5,6,8,9) (ИП-22) и Козин Андрей(закрыл 5,6,11,12) (ИП-21)
+
+
+
+                                                                                                              //Практика 14//
+using System;
+using System.Text.RegularExpressions;
+using System.Linq;
+using System.Text;
+
+
+public class TextProcessor
+{
+    public static void Main(string[] args)
+    {
+        // Устанавливаем кодировку вывода для корректного отображения кириллицы
+        Console.OutputEncoding = System.Text.Encoding.UTF8;
+
+        while (true)
+        {
+            Console.WriteLine("\n\n--- МЕНЮ ЗАДАНИЙ ---");
+            Console.WriteLine("1. Удалить часть текста, заключенную в скобки.");
+            Console.WriteLine("2. Сколько раз в тексте встречается заданное слово.");
+            Console.WriteLine("3. В тексте вставить между словами вместо пробела запятую и пробел.");
+            Console.WriteLine("4. Определить, какой процент слов в тексте начинается на букву К.");
+            Console.WriteLine("5. Исключить из символьной строки все цифры.");
+            Console.WriteLine("6. Определить, содержит ли текст символы, отличные от букв и пробела.");
+            Console.WriteLine("7. Удалить буквы с ASCII-кодами от 70 до 75.");
+            Console.WriteLine("8. Определить, имеются ли две подряд идущие '4'.");
+            Console.WriteLine("9. Вставить пробел после каждой цифры.");
+            Console.WriteLine("10. Увеличить каждую цифру на 1 (9 заменить на 0).");
+            Console.WriteLine("11. Расположить сначала цифры, потом буквы.");
+            Console.WriteLine("12. Преобразовать маленькие латинские буквы в большие.");
+            Console.WriteLine("13. Зашифровать слово (циклический сдвиг на 1 позицию).");
+            Console.WriteLine("14. Вывести строку цифр, расположив в каждой подстроке по 5 цифр.");
+            Console.WriteLine("15. Увеличить ASCII-коды букв на 3.");
+            Console.WriteLine("16. Подсчитать сумму цифр, кратных 3, в 3 строках.");
+            Console.WriteLine("17. Подсчитать сумму цифр в 2 строках.");
+            Console.WriteLine("18. Подсчитать количество символов с ASCII-кодом >=70.");
+            Console.WriteLine("19. Добавить справа заданное количество символов.");
+            Console.WriteLine("20. Удалить пробелы из строки.");
+            Console.WriteLine("21. Вывести слово в зеркальном отображении.");
+            Console.WriteLine("22. Разбить текст на строки по k символов.");
+            Console.WriteLine("23. Вставить k пробелов через каждые n символов.");
+            Console.WriteLine("24. Заменить слово А1 на слово А2.");
+            Console.WriteLine("25. Заменить один символ другим.");
+            Console.WriteLine("26. Убрать лишние пробелы между словами.");
+            Console.WriteLine("27. Зашифровать 3 строки, заменив 'с' на 'о'.");
+            Console.WriteLine("28. Преобразовать 3 строки: после каждой цифры добавить '!'.");
+            Console.WriteLine("29. Заменить все пробелы на символ '_'.");
+            Console.WriteLine("30. Удалить буквы 'р' и 'с' из предложения.");
+            Console.WriteLine("0. Выход из программы.");
+            Console.Write("Введите номер задания: ");
+
+            string choice = Console.ReadLine();
+
+            if (choice == "0")
+            {
+                Console.WriteLine("Завершение работы программы.");
+                break;
+            }
+
+            string inputText; // Для большинства заданий потребуется исходный текст
+            switch (choice)
+            {
+                case "1":
+                    Console.Write("Введите исходный текст: ");
+                    inputText = Console.ReadLine();
+                    Console.WriteLine("\n--- Задание 1: Удаление текста в скобках ---");
+                    string result1 = RemoveTextInParentheses(inputText);
+                    Console.WriteLine("Исходный текст: " + inputText);
+                    Console.WriteLine("Результат: " + result1);
+                    break;
+
+                case "2":
+                    Console.Write("Введите исходный текст: ");
+                    inputText = Console.ReadLine();
+                    Console.WriteLine("\n--- Задание 2: Подсчет вхождений слова ---");
+                    Console.Write("Введите слово для поиска: ");
+                    string wordToCount = Console.ReadLine();
+                    int count = CountWordOccurrences(inputText, wordToCount);
+                    Console.WriteLine("Исходный текст: " + inputText);
+                    Console.WriteLine($"Слово '{wordToCount}' встречается в тексте {count} раз.");
+                    break;
+
+                case "3":
+                    Console.Write("Введите исходный текст: ");
+                    inputText = Console.ReadLine();
+                    Console.WriteLine("\n--- Задание 3: Замена пробелов на запятые и пробелы ---");
+                    string result3 = ReplaceSpacesWithCommaAndSpace(inputText);
+                    Console.WriteLine("Исходный текст: " + inputText);
+                    Console.WriteLine("Результат: " + result3);
+                    break;
+
+                case "4":
+                    Console.Write("Введите исходный текст: ");
+                    inputText = Console.ReadLine();
+                    Console.WriteLine("\n--- Задание 4: Процент слов, начинающихся на букву 'К' ---");
+                    double percentage = PercentageWordsStartingWithK(inputText);
+                    Console.WriteLine("Исходный текст: " + inputText);
+                    Console.WriteLine($"Процент слов, начинающихся на 'К' (или 'к'): {percentage:F2}%");
+                    break;
+
+                case "5":
+                    Console.Write("Введите исходный текст: ");
+                    inputText = Console.ReadLine();
+                    Console.WriteLine("\n--- Задание 5: Исключение цифр из строки ---");
+                    string result5 = RemoveDigits(inputText);
+                    Console.WriteLine("Исходный текст: " + inputText);
+                    Console.WriteLine("Результат: " + result5);
+                    break;
+
+                case "6":
+                    Console.Write("Введите исходный текст: ");
+                    inputText = Console.ReadLine();
+                    Console.WriteLine("\n--- Задание 6: Проверка на небуквенные/непробельные символы ---");
+                    bool containsOtherChars = ContainsNonLettersOrSpaces(inputText);
+                    Console.WriteLine("Исходный текст: " + inputText);
+                    Console.WriteLine($"Содержит ли текст символы, отличные от букв и пробела: {containsOtherChars}");
+                    break;
+
+                case "7":
+                    Console.Write("Введите исходный текст: ");
+                    inputText = Console.ReadLine();
+                    Console.WriteLine("\n--- Задание 7: Удаление букв с ASCII-кодами 70-75 ---");
+                    string result7 = RemoveCharsByAsciiRange(inputText, 70, 75);
+                    Console.WriteLine("Исходный текст: " + inputText);
+                    Console.WriteLine("Результат: " + result7);
+                    break;
+
+                case "8":
+                    Console.Write("Введите исходный текст: ");
+                    inputText = Console.ReadLine();
+                    Console.WriteLine("\n--- Задание 8: Проверка на '44' ---");
+                    bool containsDoubleFour = ContainsDoubleFour(inputText);
+                    Console.WriteLine("Исходный текст: " + inputText);
+                    Console.WriteLine($"Содержит ли строка две подряд '4': {containsDoubleFour}");
+                    break;
+
+                case "9":
+                    Console.Write("Введите исходный текст (буквы и цифры): ");
+                    inputText = Console.ReadLine();
+                    Console.WriteLine("\n--- Задание 9: Вставка пробела после каждой цифры ---");
+                    string result9 = InsertSpaceAfterDigits(inputText);
+                    Console.WriteLine("Исходный текст: " + inputText);
+                    Console.WriteLine("Результат: " + result9);
+                    break;
+
+                case "10":
+                    Console.Write("Введите исходный текст (с цифрами): ");
+                    inputText = Console.ReadLine();
+                    Console.WriteLine("\n--- Задание 10: Увеличение цифр на 1 (9->0) ---");
+                    string result10 = IncrementDigits(inputText);
+                    Console.WriteLine("Исходный текст: " + inputText);
+                    Console.WriteLine("Результат: " + result10);
+                    break;
+
+                case "11":
+                    Console.Write("Введите исходный текст (с цифрами и буквами): ");
+                    inputText = Console.ReadLine();
+                    Console.WriteLine("\n--- Задание 11: Сортировка: цифры, затем буквы ---");
+                    string result11 = SortDigitsThenLetters(inputText);
+                    Console.WriteLine("Исходный текст: " + inputText);
+                    Console.WriteLine("Результат: " + result11);
+                    break;
+
+                case "12":
+                    Console.Write("Введите строку маленьких латинских букв: ");
+                    inputText = Console.ReadLine();
+                    Console.WriteLine("\n--- Задание 12: Преобразование маленьких букв в большие ---");
+                    string result12 = inputText.ToUpperInvariant();
+                    Console.WriteLine("Исходный текст: " + inputText);
+                    Console.WriteLine("Результат: " + result12);
+                    break;
+
+                case "13":
+                    Console.Write("Введите слово для шифрования: ");
+                    inputText = Console.ReadLine();
+                    Console.WriteLine("\n--- Задание 13: Зашифровка слова (циклический сдвиг) ---");
+                    string result13 = EncryptWordCyclicShift(inputText);
+                    Console.WriteLine("Исходное слово: " + inputText);
+                    Console.WriteLine("Зашифрованное слово: " + result13);
+                    break;
+
+                case "14":
+                    Console.Write("Введите строку цифр: ");
+                    inputText = Console.ReadLine();
+                    Console.WriteLine("\n--- Задание 14: Вывод цифр по 5 в подстроке ---");
+                    Console.WriteLine("Исходная строка: " + inputText);
+                    DisplayDigitsInSubstrings(inputText, 5);
+                    break;
+
+                case "15":
+                    Console.Write("Введите строку: ");
+                    inputText = Console.ReadLine();
+                    Console.WriteLine("\n--- Задание 15: Увеличение ASCII-кодов букв на 3 ---");
+                    string result15 = IncrementLetterAsciiByThree(inputText);
+                    Console.WriteLine("Исходный текст: " + inputText);
+                    Console.WriteLine("Результат: " + result15);
+                    break;
+
+                case "16":
+                    Console.WriteLine("\n--- Задание 16: Сумма цифр, кратных 3, в 3 строках ---");
+                    for (int i = 1; i <= 3; i++)
+                    {
+                        Console.Write($"Введите строку {i}: ");
+                        inputText = Console.ReadLine();
+                        int sum = SumDigitsDivisibleByThree(inputText);
+                        Console.WriteLine($"Сумма цифр, кратных 3, в строке {i}: {sum}");
+                    }
+                    break;
+
+                case "17":
+                    Console.WriteLine("\n--- Задание 17: Сумма цифр в 2 строках ---");
+                    for (int i = 1; i <= 2; i++)
+                    {
+                        Console.Write($"Введите строку {i}: ");
+                        inputText = Console.ReadLine();
+                        int sum = SumDigitsInString(inputText);
+                        Console.WriteLine($"Сумма цифр в строке {i}: {sum}");
+                    }
+                    break;
+
+                case "18":
+                    Console.Write("Введите строку: ");
+                    inputText = Console.ReadLine();
+                    Console.WriteLine("\n--- Задание 18: Количество символов с ASCII >= 70 ---");
+                    int countAscii70 = CountCharsWithAsciiGreaterThanOrEqualTo70(inputText);
+                    Console.WriteLine($"Количество символов с ASCII-кодом >=70: {countAscii70}");
+                    break;
+
+                case "19":
+                    Console.Write("Введите исходную строку: ");
+                    string originalString19 = Console.ReadLine(); // Используем отдельную переменную для "исходной"
+                    Console.Write("Введите символ для добавления: ");
+                    char charToAdd = Console.ReadKey().KeyChar;
+                    Console.WriteLine(); // Переход на новую строку после ReadKey
+                    Console.Write("Введите количество символов для добавления: ");
+                    if (!int.TryParse(Console.ReadLine(), out int numToAdd))
+                    {
+                        Console.WriteLine("Некорректное количество.");
+                        break;
+                    }
+                    Console.WriteLine("\n--- Задание 19: Добавление символов справа ---");
+                    string modifiedString19 = AddCharsRight(originalString19, charToAdd, numToAdd);
+                    Console.WriteLine("Исходная строка: " + originalString19);
+                    Console.WriteLine("Результат: " + modifiedString19);
+                    break;
+
+                case "20":
+                    Console.Write("Введите строку с пробелами: ");
+                    inputText = Console.ReadLine();
+                    Console.WriteLine("\n--- Задание 20: Удаление пробелов из строки ---");
+                    string result20 = RemoveSpaces(inputText);
+                    Console.WriteLine("Исходная строка: " + inputText);
+                    Console.WriteLine("Результат: " + result20);
+                    break;
+
+                case "21":
+                    Console.Write("Введите слово: ");
+                    inputText = Console.ReadLine();
+                    Console.WriteLine("\n--- Задание 21: Зеркальное отображение слова ---");
+                    string result21 = ReverseString(inputText);
+                    Console.WriteLine("Исходное слово: " + inputText);
+                    Console.WriteLine("Зеркальное отображение: " + result21);
+                    break;
+
+                case "22":
+                    Console.Write("Введите текст: ");
+                    inputText = Console.ReadLine();
+                    Console.Write("Введите количество символов (k) для разбиения: ");
+                    if (!int.TryParse(Console.ReadLine(), out int k22) || k22 <= 0)
+                    {
+                        Console.WriteLine("Некорректное значение k.");
+                        break;
+                    }
+                    Console.WriteLine("\n--- Задание 22: Разбиение текста на строки по k символов ---");
+                    Console.WriteLine("Исходный текст:\n" + inputText);
+                    Console.WriteLine("Разбитый текст:");
+                    SplitTextIntoLines(inputText, k22);
+                    break;
+
+                case "23":
+                    Console.Write("Введите строку: ");
+                    inputText = Console.ReadLine();
+                    Console.Write("Введите n (интервал): ");
+                    if (!int.TryParse(Console.ReadLine(), out int n23) || n23 <= 0)
+                    {
+                        Console.WriteLine("Некорректное значение n.");
+                        break;
+                    }
+                    Console.Write("Введите k (количество пробелов для вставки): ");
+                    if (!int.TryParse(Console.ReadLine(), out int k23) || k23 < 0)
+                    {
+                        Console.WriteLine("Некорректное значение k.");
+                        break;
+                    }
+                    Console.WriteLine("\n--- Задание 23: Вставка пробелов через каждые n символов ---");
+                    string result23 = InsertSpacesPeriodically(inputText, n23, k23);
+                    Console.WriteLine("Исходная строка: " + inputText);
+                    Console.WriteLine("Результат: " + result23);
+                    break;
+
+                case "24":
+                    Console.Write("Введите текст: ");
+                    inputText = Console.ReadLine();
+                    Console.Write("Введите слово А1 для замены: ");
+                    string wordA1 = Console.ReadLine();
+                    Console.Write("Введите слово А2, на которое заменить: ");
+                    string wordA2 = Console.ReadLine();
+                    Console.WriteLine("\n--- Задание 24: Замена слова А1 на А2 ---");
+                    string result24 = ReplaceWord(inputText, wordA1, wordA2);
+                    Console.WriteLine("Исходный текст: " + inputText);
+                    Console.WriteLine($"Результат (заменено '{wordA1}' на '{wordA2}'): " + result24);
+                    break;
+
+                case "25":
+                    Console.Write("Введите слово: ");
+                    inputText = Console.ReadLine();
+                    Console.Write("Введите символ для замены (старый): ");
+                    char oldChar = Console.ReadKey().KeyChar;
+                    Console.WriteLine();
+                    Console.Write("Введите символ, на который заменить (новый): ");
+                    char newChar = Console.ReadKey().KeyChar;
+                    Console.WriteLine();
+                    Console.WriteLine("\n--- Задание 25: Замена одного символа другим ---");
+                    string result25 = ReplaceChar(inputText, oldChar, newChar);
+                    Console.WriteLine("Исходное слово: " + inputText);
+                    Console.WriteLine($"Результат (заменено '{oldChar}' на '{newChar}'): " + result25);
+                    break;
+
+                case "26":
+                    Console.Write("Введите текст с лишними пробелами: ");
+                    inputText = Console.ReadLine();
+                    Console.WriteLine("\n--- Задание 26: Убрать лишние пробелы ---");
+                    string result26 = RemoveExtraSpaces(inputText);
+                    Console.WriteLine("Исходный текст: " + inputText);
+                    Console.WriteLine("Результат: " + result26);
+                    break;
+
+                case "27":
+                    Console.WriteLine("\n--- Задание 27: Зашифровка 3 строк ('с' на 'о') ---");
+                    for (int i = 1; i <= 3; i++)
+                    {
+                        Console.Write($"Введите строку {i}: ");
+                        inputText = Console.ReadLine();
+                        string encryptedString = ReplaceChar(inputText, 'с', 'о'); // Используем ранее созданную функцию ReplaceChar
+                        Console.WriteLine($"Строка {i} зашифрована: " + encryptedString);
+                    }
+                    break;
+
+                case "28":
+                    Console.WriteLine("\n--- Задание 28: Добавление '!' после каждой цифры в 3 строках ---");
+                    for (int i = 1; i <= 3; i++)
+                    {
+                        Console.Write($"Введите строку {i}: ");
+                        inputText = Console.ReadLine();
+                        string transformedString = InsertSymbolAfterDigits(inputText, '!'); // Новая вспомогательная функция
+                        Console.WriteLine($"Строка {i} преобразована: " + transformedString);
+                    }
+                    break;
+
+                case "29":
+                    Console.Write("Введите предложение: ");
+                    inputText = Console.ReadLine();
+                    Console.WriteLine("\n--- Задание 29: Замена пробелов на '_' ---");
+                    string result29 = ReplaceSpacesWithUnderscore(inputText);
+                    Console.WriteLine("Исходное предложение: " + inputText);
+                    Console.WriteLine("Результат: " + result29);
+                    break;
+
+                case "30":
+                    Console.Write("Введите предложение: ");
+                    inputText = Console.ReadLine();
+                    Console.WriteLine("\n--- Задание 30: Удаление букв 'р' и 'с' ---");
+                    string result30 = RemoveSpecificChars(inputText, 'р', 'с');
+                    Console.WriteLine("Исходное предложение: " + inputText);
+                    Console.WriteLine("Результат: " + result30);
+                    break;
+
+                default:
+                    Console.WriteLine("Неверный выбор. Пожалуйста, введите номер задания от 0 до 30.");
+                    break;
+            }
+        }
+    }
+
+    // --- Функции для заданий 1-5 (из предыдущего ответа) ---
+
+    /// <summary>
+    /// Удаляет часть текста, заключенную в скобки (вместе со скобками).
+    /// </summary>
+    public static string RemoveTextInParentheses(string text)
+    {
+        return Regex.Replace(text, @"\s*\([^)]*\)", "");
+    }
+
+    /// <summary>
+    /// Подсчитывает, сколько раз в тексте встречается заданное слово (регистронезависимо).
+    /// </summary>
+    public static int CountWordOccurrences(string text, string word)
+    {
+        string normalizedText = Regex.Replace(text, @"[^\p{L}\p{N}\s]", "").ToLowerInvariant();
+        string normalizedWord = word.ToLowerInvariant();
+        string[] words = normalizedText.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+        return words.Count(w => w == normalizedWord);
+    }
+
+    /// <summary>
+    /// Вставляет между словами запятую и пробел вместо одного пробела.
+    /// </summary>
+    public static string ReplaceSpacesWithCommaAndSpace(string text)
+    {
+        string[] words = text.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+        return string.Join(", ", words);
+    }
+
+    /// <summary>
+    /// Определяет, какой процент слов в тексте начинается на букву К (регистронезависимо).
+    /// </summary>
+    public static double PercentageWordsStartingWithK(string text)
+    {
+        string[] rawWords = text.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+        int totalWords = 0;
+        int wordsStartingWithK = 0;
+
+        foreach (string rawWord in rawWords)
+        {
+            string cleanedWord = Regex.Replace(rawWord, @"[^\p{L}\p{N}]", "").ToLowerInvariant();
+            if (!string.IsNullOrWhiteSpace(cleanedWord))
+            {
+                totalWords++;
+                if (cleanedWord.StartsWith("к"))
+                {
+                    wordsStartingWithK++;
+                }
+            }
+        }
+        return totalWords == 0 ? 0.0 : (double)wordsStartingWithK / totalWords * 100;
+    }
+
+    /// <summary>
+    /// Исключает из символьной строки все цифры.
+    /// </summary>
+    public static string RemoveDigits(string text)
+    {
+        return Regex.Replace(text, @"\d", "");
+    }
+
+    // --- Новые функции для заданий 6-30 ---
+
+    /// <summary>
+    /// 6. Определяет, содержит ли данный текст символы, отличные от букв и пробела.
+    /// </summary>
+    public static bool ContainsNonLettersOrSpaces(string text)
+    {
+        // Паттерн `[^a-zA-Z\s\p{L}]` ищет любой символ, который НЕ является
+        // латинской буквой (a-z, A-Z), пробельным символом (\s) или любой буквой Unicode (\p{L}).
+        return Regex.IsMatch(text, @"[^a-zA-Z\s\p{L}]");
+    }
+
+    /// <summary>
+    /// 7. Преобразует введенную строку так, чтобы из нее были удалены буквы с ASCII - кодами от 70 до 75.
+    /// </summary>
+    public static string RemoveCharsByAsciiRange(string text, int minAscii, int maxAscii)
+    {
+        StringBuilder sb = new StringBuilder();
+        foreach (char c in text)
+        {
+            int asciiCode = (int)c;
+            // Пропускаем символы, если это буква и ее ASCII-код попадает в заданный диапазон
+            if (char.IsLetter(c) && asciiCode >= minAscii && asciiCode <= maxAscii)
+            {
+                continue;
+            }
+            sb.Append(c);
+        }
+        return sb.ToString();
+    }
+
+    /// <summary>
+    /// 8. Определяет, имеются ли во введенной строке следующие подряд две "4".
+    /// </summary>
+    public static bool ContainsDoubleFour(string text)
+    {
+        return text.Contains("44");
+    }
+
+    /// <summary>
+    /// 9. Введенную строку букв и цифр преобразовать так, чтобы после каждой цифры следовал пробел.
+    /// </summary>
+    public static string InsertSpaceAfterDigits(string text)
+    {
+        // $1 - это обратная ссылка на первую захваченную группу, т.е. на найденную цифру
+        return Regex.Replace(text, @"(\d)", "$1 ");
+    }
+
+    /// <summary>
+    /// Вспомогательная функция для задания 28
+    /// Преобразует строку, вставляя заданный символ после каждой цифры.
+    /// </summary>
+    public static string InsertSymbolAfterDigits(string text, char symbol)
+    {
+        // Используем string.Join для более гибкой вставки, или Regex как в задании 9, но с символом.
+        // Здесь используем StringBuilder, чтобы быть более явным.
+        StringBuilder sb = new StringBuilder();
+        foreach (char c in text)
+        {
+            sb.Append(c);
+            if (char.IsDigit(c))
+            {
+                sb.Append(symbol);
+            }
+        }
+        return sb.ToString();
+    }
+
+
+    /// <summary>
+    /// 10. Изменить введенную строку так, чтобы каждая из цифр увеличилась на 1 (9 заменить 0).
+    /// </summary>
+    public static string IncrementDigits(string text)
+    {
+        StringBuilder sb = new StringBuilder();
+        foreach (char c in text)
+        {
+            if (char.IsDigit(c))
+            {
+                int digit = (int)char.GetNumericValue(c);
+                digit = (digit + 1) % 10; // Увеличение на 1, 9 становится 0
+                sb.Append(digit);
+            }
+            else
+            {
+                sb.Append(c);
+            }
+        }
+        return sb.ToString();
+    }
+
+    /// <summary>
+    /// 11. Преобразовать введенную строку так, чтобы сначала были расположены цифры, потом буквы.
+    /// </summary>
+    public static string SortDigitsThenLetters(string text)
+    {
+        StringBuilder digits = new StringBuilder();
+        StringBuilder letters = new StringBuilder();
+        StringBuilder others = new StringBuilder();
+
+        foreach (char c in text)
+        {
+            if (char.IsDigit(c))
+            {
+                digits.Append(c);
+            }
+            else if (char.IsLetter(c))
+            {
+                letters.Append(c);
+            }
+            else
+            {
+                others.Append(c); // Остальные символы оставляем как есть, их позиция не определена
+            }
+        }
+        // Можно дополнительно отсортировать digits и letters, если это подразумевается.
+        // Например: string.Concat(digits.ToString().OrderBy(x => x))
+        // Но по условию задачи просто их расположение: цифры, затем буквы.
+        return digits.Append(letters).Append(others).ToString();
+    }
+
+    /// <summary>
+    /// 13. Зашифровать введенное слово, сместив все буквы на 1 позицию (последняя становиться первой).
+    /// (Циклический сдвиг вправо)
+    /// </summary>
+    public static string EncryptWordCyclicShift(string word)
+    {
+        if (string.IsNullOrEmpty(word) || word.Length == 1)
+        {
+            return word;
+        }
+        return word[word.Length - 1] + word.Substring(0, word.Length - 1);
+    }
+
+    /// <summary>
+    /// 14. Введенную строку цифр вывести, расположив в каждой подстроке по 5 цифр.
+    /// </summary>
+    public static void DisplayDigitsInSubstrings(string text, int chunkSize)
+    {
+        for (int i = 0; i < text.Length; i += chunkSize)
+        {
+            if (i + chunkSize <= text.Length)
+            {
+                Console.WriteLine(text.Substring(i, chunkSize));
+            }
+            else
+            {
+                Console.WriteLine(text.Substring(i)); // Остаток
+            }
+        }
+    }
+
+    /// <summary>
+    /// 15. Преобразовать буквы введенной строки так, чтобы их ASCII-коды увеличились на 3.
+    /// </summary>
+    public static string IncrementLetterAsciiByThree(string text)
+    {
+        StringBuilder sb = new StringBuilder();
+        foreach (char c in text)
+        {
+            if (char.IsLetter(c))
+            {
+                sb.Append((char)((int)c + 3));
+            }
+            else
+            {
+                sb.Append(c);
+            }
+        }
+        return sb.ToString();
+    }
+
+    /// <summary>
+    /// 16. Функция, подсчитывающая сумму цифр, кратных 3, в строке.
+    /// </summary>
+    public static int SumDigitsDivisibleByThree(string text)
+    {
+        int sum = 0;
+        foreach (char c in text)
+        {
+            if (char.IsDigit(c))
+            {
+                int digit = (int)char.GetNumericValue(c);
+                if (digit % 3 == 0)
+                {
+                    sum += digit;
+                }
+            }
+        }
+        return sum;
+    }
+
+    /// <summary>
+    /// 17. Функция, подсчитывающая сумму цифр в строке.
+    /// </summary>
+    public static int SumDigitsInString(string text)
+    {
+        int sum = 0;
+        foreach (char c in text)
+        {
+            if (char.IsDigit(c))
+            {
+                sum += (int)char.GetNumericValue(c);
+            }
+        }
+        return sum;
+    }
+
+    /// <summary>
+    /// 18. Функция, определяющая количество символов введенной строки, ASCII-коды которых >=70.
+    /// </summary>
+    public static int CountCharsWithAsciiGreaterThanOrEqualTo70(string text)
+    {
+        int count = 0;
+        foreach (char c in text)
+        {
+            if ((int)c >= 70)
+            {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    /// <summary>
+    /// 19. Процедура (функция, возвращающая модифицированную строку), добавляющая справа заданное количество заданных символов.
+    /// </summary>
+    public static string AddCharsRight(string text, char charToAdd, int count)
+    {
+        return text + new string(charToAdd, count);
+    }
+
+    /// <summary>
+    /// 20. Процедура (функция), позволяющая из заданной строки удалить пробелы.
+    /// </summary>
+    public static string RemoveSpaces(string text)
+    {
+        return text.Replace(" ", "");
+    }
+
+    /// <summary>
+    /// 21. Процедура (функция), позволяющая записывать введенное слово в зеркальном отображении.
+    /// </summary>
+    public static string ReverseString(string text)
+    {
+        char[] charArray = text.ToCharArray();
+        Array.Reverse(charArray);
+        return new string(charArray);
+    }
+
+    /// <summary>
+    /// 22. Процедура, которая позволяет введенный текст разбить на строки по k символов.
+    /// </summary>
+    public static void SplitTextIntoLines(string text, int k)
+    {
+        if (k <= 0) return; // Защита от деления на ноль или некорректного k
+
+        for (int i = 0; i < text.Length; i += k)
+        {
+            if (i + k <= text.Length)
+            {
+                Console.WriteLine(text.Substring(i, k));
+            }
+            else
+            {
+                Console.WriteLine(text.Substring(i)); // Остаток
+            }
+        }
+    }
+
+    /// <summary>
+    /// 23. Процедура (функция), которая позволит во введенной строке через каждые n символов вставить k пробелов.
+    /// </summary>
+    public static string InsertSpacesPeriodically(string text, int n, int k)
+    {
+        if (n <= 0 || k < 0 || text.Length == 0) return text;
+
+        StringBuilder sb = new StringBuilder();
+        string spaces = new string(' ', k);
+
+        for (int i = 0; i < text.Length; i++)
+        {
+            sb.Append(text[i]);
+            if ((i + 1) % n == 0 && i < text.Length - 1) // Вставляем пробелы, кроме конца строки
+            {
+                sb.Append(spaces);
+            }
+        }
+        return sb.ToString();
+    }
+
+    /// <summary>
+    /// 24. Процедура (функция), которая в заданном тексте заменяет слово А1 на слово А2 (длины слов не совпадают).
+    /// </summary>
+    public static string ReplaceWord(string text, string oldWord, string newWord)
+    {
+        return text.Replace(oldWord, newWord);
+    }
+
+    /// <summary>
+    /// 25. Процедура (функция), которая во введенном слове заменяет один символ другим.
+    /// Также используется для Задания 27.
+    /// </summary>
+    public static string ReplaceChar(string text, char oldChar, char newChar)
+    {
+        return text.Replace(oldChar, newChar);
+    }
+
+    /// <summary>
+    /// 26. Процедура (функция), которая в тексте убирает лишние пробелы между словами, оставив по одному.
+    /// </summary>
+    public static string RemoveExtraSpaces(string text)
+    {
+       
+        return Regex.Replace(text.Trim(), @"\s+", " ");
+    }
+
+    
+
+    /// <summary>
+    /// 29. Процедура (функция), которая все пробелы в предложении заменяет на символ "_".
+    /// </summary>
+    public static string ReplaceSpacesWithUnderscore(string text)
+    {
+        return text.Replace(' ', '_');
+    }
+
+    /// <summary>
+    /// 30. Процедура (функция), которая удаляет из предложения буквы «р» и «с».
+    /// </summary>
+    public static string RemoveSpecificChars(string text, params char[] charsToRemove)
+    {
+        StringBuilder sb = new StringBuilder(text.Length);
+        foreach (char c in text)
+        {
+            bool shouldRemove = false;
+            foreach (char charToRemove in charsToRemove)
+            {
+                if (char.ToLowerInvariant(c) == char.ToLowerInvariant(charToRemove)) // Регистронезависимое удаление
+                {
+                    shouldRemove = true;
+                    break;
+                }
+            }
+            if (!shouldRemove)
+            {
+                sb.Append(c);
+            }
+        }
+        return sb.ToString();
+    }
+}
+
+Делали эту практику 14 :Козин Андрей(Ип-21),Мелик Вартанов(Ип-21),Рябченко Тимофей(Ип-21) 
