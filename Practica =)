@@ -3,11 +3,121 @@ using System.Collections.Generic;
 
 
 
+                                                                                                //Practica 3 Вариант 1//
+/* 
+public class Point
+{
+    private int x, y;
+
+    public Point()
+    {
+        x = 0;
+        y = 0;
+    }
+
+    public Point(int x, int y)
+    {
+        this.x = x;
+        this.y = y;
+    }
+
+    public void Display()
+    {
+        Console.WriteLine($"Координаты точки: ({x}, {y})");
+    }
+
+    public double DistanceFromOrigin()
+    {
+        return Math.Sqrt(x * x + y * y);
+    }
+
+    public void Move(int a, int b)
+    {
+        x += a;
+        y += b;
+    }
+
+    public int X
+    {
+        get => x;
+        set => x = value;
+    }
+
+    public int Y
+    {
+        get => y;
+        set => y = value;
+    }
+
+    public int this[int index]
+    {
+        get
+        {
+            if (index == 0) return x;
+            if (index == 1) return y;
+            throw new IndexOutOfRangeException("Индекс должен быть 0 или 1.");
+        }
+    }
+
+    public static Point operator ++(Point p)
+    {
+        return new Point(p.x + 1, p.y + 1);
+    }
+
+    public static Point operator --(Point p)
+    {
+        return new Point(p.x - 1, p.y - 1);
+    }
+
+    public static bool operator true(Point p)
+    {
+        return p.x == p.y;
+    }
+
+    public static bool operator false(Point p)
+    {
+        return p.x != p.y;
+    }
+
+    public static Point operator +(Point p, int scalar)
+    {
+        return new Point(p.x + scalar, p.y + scalar);
+    }
+
+    public static Point operator -(Point p, int scalar)
+    {
+        return new Point(p.x - scalar, p.y - scalar);
+    }
+}
+
+
+public class Program
+{
+    public static void Main()
+    {
+        Point p1 = new Point(3, 4);
+        p1.Display();
+        Console.WriteLine($"Расстояние от начала координат: {p1.DistanceFromOrigin()}");
+
+        p1.Move(1, -1);
+        p1.Display();
+
+        if (p1)
+            Console.WriteLine("Координаты равны.");
+        else
+            Console.WriteLine("Координаты не равны.");
+
+        Point p2 = p1 + 5;
+        p2.Display();
+    }
+}
+
+*/
 
 
 
 
-//Practica 5//
+                                                                                            //Practica 5//
 /*
 public class GenericClass<T>
 {
@@ -324,7 +434,7 @@ class Program
 }
 */
 
-//Practica 8//
+                                                                                                //Practica 8//
 
 
 /*
@@ -416,7 +526,7 @@ class Program
 */
 
 
-//Practica 9//
+                                                                                                                //Practica 9//
 
 
 /*
@@ -921,7 +1031,7 @@ public class Program
     }
 }
 */
-//Practica 12//
+                                                                                                                    //Practica 12//
 
 //задание 1//
 /*
@@ -1301,4 +1411,4 @@ class Program
 
 
 
-Работу выполнили Усенко Дмитрий(закрыл 5,6,8,9) (ИП-22) и Козин Андрей(закрыл 5,6) (ИП-21)
+Работу выполнили Усенко Дмитрий(закрыл 5,6,8,9) (ИП-22) и Козин Андрей(закрыл 5,6,11,12) (ИП-21)
