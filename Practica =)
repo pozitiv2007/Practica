@@ -620,4 +620,685 @@ class Program
 }
 */
 
+
+                                                                                //Practica 11//
+/* Задание 1 и 2
+class Футболист
+{
+    public string Имя { get; set; }
+    public int Номер { get; set; }
+
+    public Футболист(string имя, int номер)
+    {
+        Имя = имя;
+        Номер = номер;
+    }
+
+    public override string ToString()
+    {
+        return $"{Имя} (номер {Номер})";
+    }
+}
+
+class ФутбольнаяКоманда
+{
+    private Футболист[] футболисты = new Футболист[11];
+
+    public Футболист this[int index]
+    {
+        get
+        {
+            if (index < 0 || index >= футболисты.Length) return null; // Возвращаем null вместо исключения
+            return футболисты[index];
+        }
+        set
+        {
+            if (index >= 0 && index < футболисты.Length)
+                футболисты[index] = value;
+        }
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        ФутбольнаяКоманда команда = new ФутбольнаяКоманда();
+        команда[0] = new Футболист("Игрок 1", 10);
+        команда[1] = new Футболист("Игрок 2", 9);
+
+        for (int i = 0; i < 12; i++) // Попытка доступа к 12 индексам
+        {
+            var игрок = команда[i];
+            if (игрок != null)
+                Console.WriteLine(игрок);
+            else
+                Console.WriteLine($"Игрок с индексом {i} отсутствует.");
+        }
+    }
+}
+*/
+
+
+/* Задание 3
+class Word
+{
+    public string Source { get; }
+    public string Target { get; set; }
+
+    public Word(string source, string target)
+    {
+        Source = source;
+        Target = target;
+    }
+}
+
+class Dictionary
+{
+    private Word[] words;
+
+    public Dictionary()
+    {
+        words = new Word[]
+        {
+            new Word("red", "красный"),
+            new Word("blue", "синий"),
+            new Word("green", "зеленый")
+        };
+    }
+
+    public string this[string source]
+    {
+        get
+        {
+            foreach (var word in words)
+            {
+                if (word.Source.Equals(source, StringComparison.OrdinalIgnoreCase))
+                {
+                    return word.Target;
+                }
+            }
+            return null; 
+        }
+        set
+        {
+            for (int i = 0; i < words.Length; i++)
+            {
+                if (words[i].Source.Equals(source, StringComparison.OrdinalIgnoreCase))
+                {
+                    words[i].Target = value; 
+                    return;
+                }
+            }
+       
+            Array.Resize(ref words, words.Length + 1);
+            words[words.Length - 1] = new Word(source, value);
+        }
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        Dictionary dictionary = new Dictionary();
+
+        Console.WriteLine(dictionary["red"]); 
+
+        dictionary["red"] = "алый";
+        Console.WriteLine(dictionary["red"]); 
+
+        dictionary["yellow"] = "желтый";
+        Console.WriteLine(dictionary["yellow"]);
+    }
+}
+*/
+
+
+
+
+
+
+/* Задание 4
+class CyclicArray
+{
+    private int[] numbers;
+    private int currentIndex;
+
+    public CyclicArray(int[] initialValues)
+    {
+        numbers = initialValues;
+        currentIndex = 0;
+    }
+
+    public int CurrentValue
+    {
+        get
+        {
+            return numbers[currentIndex];
+        }
+        set
+        {
+            numbers[currentIndex] = value;
+            currentIndex = (currentIndex + 1) % numbers.Length;
+        }
+    }
+
+    public void PrintArray()
+    {
+        Console.WriteLine("Array values:");
+        foreach (var number in numbers)
+        {
+            Console.WriteLine(number);
+        }
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        CyclicArray cyclicArray = new CyclicArray(new int[] { 10, 20, 30, 40 });
+
+       
+        Console.WriteLine(cyclicArray.CurrentValue); 
+
+       
+        cyclicArray.CurrentValue = 99;
+        Console.WriteLine(cyclicArray.CurrentValue); 
+
+        cyclicArray.CurrentValue = 88;
+        Console.WriteLine(cyclicArray.CurrentValue); 
+
+        cyclicArray.CurrentValue = 77;
+        Console.WriteLine(cyclicArray.CurrentValue);
+
+        cyclicArray.CurrentValue = 66;
+        Console.WriteLine(cyclicArray.CurrentValue); 
+
+       
+        cyclicArray.PrintArray();
+    }
+}
+*/
+
+
+
+
+
+/* Задание 6
+public class CustomNumber
+{
+    private int number;
+
+    public CustomNumber()
+    {
+        number = 0;
+    }
+
+    public int this[int index]
+    {
+        set
+        {
+            int digit = value % 10;
+            if (index < 0) throw new IndexOutOfRangeException("Индекс должен быть неотрицательным");
+            number = SetDigitAtPosition(number, index, digit);
+        }
+    }
+
+    private int SetDigitAtPosition(int num, int position, int digit)
+    {
+        int factor = (int)Math.Pow(10, position);
+        int higherPart = num / (factor * 10);
+        int lowerPart = num % factor;
+        return higherPart * (factor * 10) + digit * factor + lowerPart;
+    }
+
+    public override string ToString()
+    {
+        return number.ToString();
+    }
+}
+
+// Пример использования:
+public class Program
+{
+    public static void Main()
+    {
+        CustomNumber customNumber = new CustomNumber();
+        customNumber[0] = 5; // 5
+        customNumber[1] = 8; // 85
+        customNumber[2] = 3; // 385
+        Console.WriteLine(customNumber); // Вывод: 385
+    }
+}
+*/
+
+/* Задание 6
+public class TextArray
+{
+    private string[] texts;
+
+    public TextArray(string[] initialTexts)
+    {
+        texts = initialTexts;
+    }
+
+    public string this[int index]
+    {
+        get => texts[index % texts.Length];
+        set => texts[index % texts.Length] = value;
+    }
+
+    public char this[int i, int j]
+    {
+        get
+        {
+            int textIndex = i % texts.Length;
+            return texts[textIndex][j % texts[textIndex].Length];
+        }
+    }
+
+    public override string ToString()
+    {
+        return string.Join(", ", texts);
+    }
+}
+
+
+public class Program
+{
+    public static void Main()
+    {
+        TextArray textArray = new TextArray(new string[] { "Hello", "World", "CSharp" });
+        textArray[1] = "Everyone";
+        Console.WriteLine(textArray);
+
+       
+        Console.WriteLine(textArray[0, 1]);
+        Console.WriteLine(textArray[2, 3]); 
+        Console.WriteLine(textArray[3, 0]); 
+    }
+}
+*/
+//Practica 12//
+
+//задание 1//
+/*
+class Program
+{
+    static void Main()
+    {
+   
+        ArrayList arrayList = new ArrayList { 1.1, 2.2, 3.3 };
+
+        foreach (double value in arrayList)
+        {
+            Console.WriteLine(value);
+        }
+
+        arrayList.Remove(2.2);
+        Console.WriteLine("После удаления:");
+        foreach (double value in arrayList)
+        {
+            Console.WriteLine(value);
+        }
+
+       
+        Queue<double> queue = new Queue<double>();
+        queue.Enqueue(1.1);
+        queue.Enqueue(2.2);
+        queue.Enqueue(3.3);
+
+        Console.WriteLine($"Удалено из очереди: {queue.Dequeue()}");
+        foreach (double value in queue)
+        {
+            Console.WriteLine(value);
+        }
+
+        Hashtable hashtable = new Hashtable
+        {
+            ["first"] = 1.1,
+            ["second"] = 2.2,
+            ["third"] = 3.3
+        };
+
+        foreach (DictionaryEntry entry in hashtable)
+        {
+            Console.WriteLine($"Ключ: {entry.Key}, Значение: {entry.Value}");
+        }
+
+        hashtable.Remove("second");
+        Console.WriteLine("После удаления:");
+        foreach (DictionaryEntry entry in hashtable)
+        {
+            Console.WriteLine($"Ключ: {entry.Key}, Значение: {entry.Value}");
+        }
+    }
+}
+*/
+//задание 2//
+/*
+class Program
+{
+    static void Main()
+    {
+        try
+        {
+           
+            ArrayList arrayList = new ArrayList { 1.1, 2.2, 3.3 };
+            PrintArrayList(arrayList);
+            arrayList.Remove(2.2);
+            Console.WriteLine("После удаления:");
+            PrintArrayList(arrayList);
+        }
+        catch (ArgumentNullException e)
+        {
+            Console.WriteLine($"Ошибка: {e.Message}");
+        }
+        catch (InvalidCastException e)
+        {
+            Console.WriteLine($"Ошибка: {e.Message}");
+        }
+
+        try
+        {
+           
+            Queue<double> queue = new Queue<double>();
+            queue.Enqueue(1.1);
+            queue.Enqueue(2.2);
+            queue.Enqueue(3.3);
+            Console.WriteLine($"Удалено из очереди: {queue.Dequeue()}");
+        }
+        catch (InvalidOperationException e)
+        {
+            Console.WriteLine($"Ошибка: {e.Message}");
+        }
+
+        try
+        {
+            
+            Hashtable hashtable = new Hashtable
+            {
+                ["first"] = 1.1,
+                ["second"] = 2.2,
+                ["third"] = 3.3
+            };
+            PrintHashtable(hashtable);
+            hashtable.Remove("second");
+            Console.WriteLine("После удаления:");
+            PrintHashtable(hashtable);
+        }
+        catch (ArgumentException e)
+        {
+            Console.WriteLine($"Ошибка: {e.Message}");
+        }
+    }
+
+    static void PrintArrayList(ArrayList arrayList)
+    {
+        foreach (double value in arrayList)
+        {
+            Console.WriteLine(value);
+        }
+    }
+
+    static void PrintHashtable(Hashtable hashtable)
+    {
+        foreach (DictionaryEntry entry in hashtable)
+        {
+            Console.WriteLine($"Ключ: {entry.Key}, Значение: {entry.Value}");
+        }
+    }
+}
+*/
+//задание 3//
+/*
+class Program
+{
+    static void Main()
+    {
+        ArrayList arrayList = new ArrayList { 1.1, 2.2, 3.3, 0.5, 4.0 };
+        Console.WriteLine("Исходные значения:");
+        PrintArrayList(arrayList);
+
+        CalculateAverageAndModify(ref arrayList);
+
+        Console.WriteLine("После обработки:");
+        PrintArrayList(arrayList);
+    }
+
+    static void CalculateAverageAndModify(ref ArrayList arrayList)
+    {
+        double sum = 0;
+        int count = 0;
+
+        foreach (object obj in arrayList)
+        {
+            if (obj is double value)
+            {
+                sum += value;
+                count++;
+            }
+        }
+
+        double average = sum / count;
+        Console.WriteLine($"Среднее арифметическое: {average}");
+        for (int i = 0; i < arrayList.Count; i++)
+        {
+            if
+
+(arrayList[i
+
+] is double item && item < average)
+            {
+                arrayList[i] = 0; 
+            }
+        }
+    }
+
+    static void PrintArrayList(ArrayList arrayList)
+    {
+        foreach (object obj in arrayList)
+        {
+            Console.WriteLine(obj);
+        }
+    }
+}
+*/
+
+//Задание 4//
+/*
+class Program
+{
+    static void Main()
+    {
+        Console.Write("Введите скобочную структуру: ");
+        string input = Console.ReadLine();
+
+        if (IsValidBracketSequence(input))
+        {
+            Console.WriteLine("Скобочная структура правильная.");
+        }
+        else
+        {
+            Console.WriteLine("Скобочная структура неправильная.");
+        }
+    }
+
+    static bool IsValidBracketSequence(string input)
+    {
+        Stack stack = new Stack();
+
+        foreach (char ch in input)
+        {
+            if (ch == '(')
+            {
+                stack.Push(ch);
+            }
+            else if (ch == ')')
+            {
+                if (stack.Count == 0)
+                {
+                    return false; 
+                }
+                stack.Pop();
+            }
+        }
+
+        return stack.Count == 0; 
+    }
+}
+*/
+
+//задание 5//
+/*
+class Student
+{
+    public string LastName;
+    public string FirstName;
+    public int Course;
+    public int MathGrade;
+    public int PhysicsGrade;
+    public int ComputerScienceGrade;
+
+    public double AverageGrade()
+    {
+        return (MathGrade + PhysicsGrade + ComputerScienceGrade) / 3.0;
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        
+        Student[] studentsArray = new Student[6]
+        {
+            new Student { LastName = "Иванов", FirstName = "Иван", Course = 2, MathGrade = 3, PhysicsGrade = 4, ComputerScienceGrade = 3 },
+            new Student { LastName = "Петров", FirstName = "Петр", Course = 2, MathGrade = 2, PhysicsGrade = 3, ComputerScienceGrade = 4 },
+            new Student { LastName = "Сидоров", FirstName = "Сидор", Course = 1, MathGrade = 5, PhysicsGrade = 5, ComputerScienceGrade = 5 },
+            new Student { LastName = "Федоров", FirstName = "Федор", Course = 2, MathGrade = 3, PhysicsGrade = 2, ComputerScienceGrade = 4 },
+            new Student { LastName = "Кузнецов", FirstName = "Алексей", Course = 3, MathGrade = 4, PhysicsGrade = 5, ComputerScienceGrade = 4 },
+            new Student { LastName = "Смирнов", FirstName = "Смирно", Course = 2, MathGrade = 5, PhysicsGrade = 5, ComputerScienceGrade = 5 }
+        };
+
+        string worstStudentArray = FindWorstStudent(studentsArray);
+        Console.WriteLine($"Студент 2-го курса с худшими оценками (массив): {worstStudentArray}");
+
+        
+        Queue<Student> studentsQueue = new Queue<Student>();
+        studentsQueue.Enqueue(new Student { LastName = "Иванов", FirstName = "Иван", Course = 2, MathGrade = 3, PhysicsGrade = 4, ComputerScienceGrade = 3 });
+        studentsQueue.Enqueue(new Student { LastName = "Петров", FirstName = "Петр", Course = 2, MathGrade = 2, PhysicsGrade = 3, ComputerScienceGrade = 4 });
+        studentsQueue.Enqueue(new Student { LastName = "Сидоров", FirstName = "Сидор", Course = 1, MathGrade = 5, PhysicsGrade = 5, ComputerScienceGrade = 5 });
+        studentsQueue.Enqueue(new Student { LastName = "Федоров", FirstName = "Федор", Course = 2, MathGrade = 3, PhysicsGrade = 2, ComputerScienceGrade = 4 });
+        studentsQueue.Enqueue(new Student { LastName = "Кузнецов", FirstName = "Алексей", Course = 3, MathGrade = 4, PhysicsGrade = 5, ComputerScienceGrade = 4 });
+        studentsQueue.Enqueue(new Student { LastName = "Смирнов", FirstName = "Смирно", Course = 2, MathGrade = 5, PhysicsGrade = 5, ComputerScienceGrade = 5 });
+
+        string worstStudentQueue = FindWorstStudent(studentsQueue);
+        Console.WriteLine($"Студент 2-го курса с худшими оценками (очередь): {worstStudentQueue}");
+    }
+
+    static string FindWorstStudent(Student[] students)
+    {
+        string worstStudent = "";
+        double worstAverage = double.MaxValue;
+        foreach (var student in students)
+        {
+            if (student.Course == 2)
+            {
+
+double average = student.AverageGrade();
+                if (average < worstAverage)
+                {
+                    worstAverage = average;
+                    worstStudent = $"{student.LastName} {student.FirstName}";
+                }
+            }
+        }
+        return worstStudent;
+    }
+
+    static string FindWorstStudent(Queue<Student> students)
+    {
+        string worstStudent = "";
+        double worstAverage = double.MaxValue;
+
+        foreach (var student in students)
+        {
+            if (student.Course == 2)
+            {
+                double average = student.AverageGrade();
+                if (average < worstAverage)
+                {
+                    worstAverage = average;
+
+                    worstStudent = $"{student.LastName} {student.FirstName}";
+                }
+            }
+        }
+        return worstStudent;
+    }
+}
+*/
+
+//задание 6//
+
+class Person
+{
+    public string Name { get; set; }
+}
+
+class Student : Person
+{
+    public int StudentId { get; set; }
+}
+
+class TestCollections<TKey, TValue>
+    where TKey : Person, new()
+    where TValue : Student, new()
+{
+    public Dictionary<TKey, TValue> Collection2 { get; set; }
+
+    public TestCollections(int count)
+    {
+        Collection2 = new Dictionary<TKey, TValue>(count);
+        for (int i = 0; i < count; i++)
+        {
+            TKey person = new TKey { Name = $"Имя {i + 1}" };
+            TValue student = new TValue { StudentId = i + 1, Name = person.Name };
+
+            
+            if (!Collection2.ContainsKey(person))
+            {
+                Collection2[person] = student;
+            }
+        }
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        TestCollections<Person, Student> test = new TestCollections<Person, Student>(5);
+
+       
+        MeasureContainsValueTime(test.Collection2, null, "Не существующий элемент по значению");
+    }
+
+    static void MeasureContainsValueTime(Dictionary<Person, Student> dictionary, Student value, string itemName)
+    {
+        Stopwatch stopwatch = Stopwatch.StartNew();
+        bool containsValue = dictionary.ContainsValue(value);
+        stopwatch.Stop();
+        Console.WriteLine($"{itemName}: {containsValue}, время: {stopwatch.ElapsedTicks} тактов");
+    }
+}
+
+
+
+
+
+
 Работу выполнили Усенко Дмитрий(закрыл 5,6,8,9) (ИП-22) и Козин Андрей(закрыл 5,6) (ИП-21)
