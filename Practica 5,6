@@ -1,0 +1,324 @@
+using System;
+
+
+
+
+
+
+
+//Practica 5//
+/*
+public class GenericClass<T>
+{
+    private T _field;
+
+    public T Property
+    {
+        get { return _field; }
+        set { _field = value; }
+    }
+
+    public GenericClass(T initialValue)
+    {
+        _field = initialValue;
+    }
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        var intInstance = new GenericClass<int>(10);
+        Console.WriteLine("Initial value: " + intInstance.Property);
+        intInstance.Property = 20;
+        Console.WriteLine("Updated value: " + intInstance.Property);
+
+        var stringInstance = new GenericClass<string>("Hello");
+        Console.WriteLine("Initial value: " + stringInstance.Property);
+        stringInstance.Property = "Andrey";
+        Console.WriteLine("Updated value: " + stringInstance.Property);
+    }
+}
+*/
+
+
+
+
+
+
+/*
+public class Program
+{
+    public static T GetMaxElement<T>(T[] array) where T : IComparable<T>
+    {
+        if (array == null || array.Length == 0)
+            throw new ArgumentException("Array is null or empty");
+
+        T maxElement = array[0];
+        foreach (var element in array)
+        {
+            if (element.CompareTo(maxElement) > 0)
+            {
+                maxElement = element;
+            }
+        }
+        return maxElement;
+    }
+
+    public static void Main()
+    {
+        int[] intArray = { 15, 45, 300, 69, 228 };
+        Console.WriteLine("Max int: " + GetMaxElement(intArray));
+
+        string[] stringArray = { "apple", "orange", "banana" };
+        Console.WriteLine("Max string: " + GetMaxElement(stringArray));
+    }
+}
+*/
+
+
+/*
+public class GenericArray<T>
+{
+    public T[] Array { get; private set; }
+
+    public GenericArray(T[] array)
+    {
+        Array = array;
+    }
+
+    public static GenericArray<T> operator +(GenericArray<T> first, GenericArray<T> second)
+    {
+        if (first == null || second == null)
+            throw new ArgumentNullException("One of the arrays is null");
+
+        T[] combinedArray = new T[first.Array.Length + second.Array.Length];
+        first.Array.CopyTo(combinedArray, 0);
+        second.Array.CopyTo(combinedArray, first.Array.Length);
+
+        return new GenericArray<T>(combinedArray);
+    }
+
+    public void Print()
+    {
+        Console.WriteLine(string.Join(", ", Array));
+    }
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        var intArray1 = new GenericArray<int>(new int[] { 15, 25, 35 });
+        var intArray2 = new GenericArray<int>(new int[] { 45, 55 });
+
+        var resultArray = intArray1 + intArray2;
+        resultArray.Print(); 
+    }
+}
+*/
+
+/*
+public class GenericArray<T>
+{
+    private T[] array;
+
+    public GenericArray()
+    {
+        array = new T[0];
+    }
+
+    public void Add(T item)
+    {
+        T[] newArray = new T[array.Length + 1];
+        array.CopyTo(newArray, 0);
+        newArray[array.Length] = item;
+        array = newArray;
+    }
+
+    public void Remove(int index)
+    {
+        if (index < 0 || index >= array.Length)
+            throw new ArgumentOutOfRangeException("Index out of range");
+
+        T[] newArray = new T[array.Length - 1];
+        for (int i = 0, j = 0; i < array.Length; i++)
+        {
+            if (i != index)
+            {
+                newArray[j++] = array[i];
+            }
+        }
+        array = newArray;
+    }
+
+    public T Get(int index)
+    {
+        if (index < 0 || index >= array.Length)
+            throw new ArgumentOutOfRangeException("Index out of range");
+        return array[index];
+    }
+
+    public int Length => array.Length;
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        var genericArray = new GenericArray<string>();
+        genericArray.Add("Hello");
+        genericArray.Add("Maksim");
+        Console.WriteLine(genericArray.Get(0));
+        Console.WriteLine(genericArray.Length);  
+
+        genericArray.Remove(0);
+        Console.WriteLine(genericArray.Get(0)); 
+        Console.WriteLine(genericArray.Length);   
+    }
+}
+*/
+
+
+
+
+
+
+
+
+
+
+/*                                                                                                                //Practica 6//
+class Program
+{
+    static void Main()
+    {
+        try
+        {
+            Console.Write("Введите коэффициент A: ");
+            int A = Convert.ToInt32(Console.ReadLine());
+
+            Console.Write("Введите коэффициент B: ");
+            int B = Convert.ToInt32(Console.ReadLine());
+
+            if (A == 0 && B == 0)
+            {
+                Console.WriteLine("Решение существует: любое целое число x является решением.");
+            }
+            else if (A == 0)
+            {
+                Console.WriteLine("Нет решений: A равно 0, B не равно 0.");
+            }
+            else if (B % A == 0)
+            {
+                int x = B / A;
+                Console.WriteLine($"Решение: x = {x}.");
+            }
+            else
+            {
+                Console.WriteLine("Нет решений: B не делится на A без остатка.");
+            }
+        }
+        catch (FormatException)
+        {
+            Console.WriteLine("Ошибка: вводите целые числа.");
+        }
+        catch (OverflowException)
+        {
+            Console.WriteLine("Ошибка: введено слишком большое число.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Неизвестная ошибка: {ex.Message}");
+        }
+    }
+}
+*/
+
+
+
+
+
+
+/*
+class Program
+{
+    static void Main()
+    {
+        while (true)
+        {
+            Console.Write("Введите целое число (или любой другой символ для выхода): ");
+            string input = Console.ReadLine();
+
+            if (!int.TryParse(input, out int number))
+                break;
+
+            try
+            {
+                CheckNumber(number);
+            }
+            catch (OverflowException)
+            {
+                Console.WriteLine("Нечетное число.");
+            }
+            catch (ArithmeticException)
+            {
+                Console.WriteLine("Четное число.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Неизвестная ошибка: {ex.Message}");
+            }
+        }
+    }
+
+    static void CheckNumber(int number)
+    {
+        if (number % 2 == 0)
+            throw new ArithmeticException();
+        else
+            throw new OverflowException();
+    }
+}
+*/
+
+
+
+
+/*
+class CustomException : Exception
+{
+    public char[] CharArray { get; }
+
+    public CustomException(int size) : base("Исключение пользовательского типа")
+    {
+        CharArray = new char[size];
+        for (int i = 0; i < size; i++)
+        {
+            CharArray[i] = (char)('A' + i);
+        }
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        try
+        {
+          
+            throw new CustomException(26); 
+        }
+        catch (CustomException ex)
+        {
+          
+            Console.WriteLine("Содержимое массива:");
+            Console.WriteLine(string.Join(", ", ex.CharArray));
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Неизвестная ошибка: {ex.Message}");
+        }
+    }
+}
+*/
