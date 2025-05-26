@@ -2210,4 +2210,385 @@ public class TextProcessor
     }
 }
 
+                                                                                                                    //Practica 15//
+
+public class MathAndConvertTasks
+{
+
+    private static Random _random = new Random();
+
+    public static void Main(string[] args)
+    {
+        
+        Console.OutputEncoding = System.Text.Encoding.UTF8;
+
+        while (true)
+        {
+            Console.WriteLine("\n\n--- МЕНЮ ЗАДАНИЙ (Математика и Преобразование типов) ---");
+            Console.WriteLine("--- Математические вычисления и класс Math ---");
+            Console.WriteLine(" 1. Вычисление гипотенузы.");
+            Console.WriteLine(" 2. Округление чисел.");
+            Console.WriteLine(" 3. Тригонометрические функции.");
+            Console.WriteLine(" 4. Генератор случайных чисел (10 от 1 до 100).");
+            Console.WriteLine(" 5. Минимум и максимум в массиве чисел.");
+
+            Console.WriteLine("\n--- Преобразование типов и класс Convert ---");
+            Console.WriteLine(" 6. Конвертация строки в число (с обработкой ошибок).");
+            Console.WriteLine(" 7. Преобразование числа в двоичную строку.");
+            Console.WriteLine(" 8. Конвертация строки в DateTime.");
+            Console.WriteLine(" 9. Изменение типа данных (object в double).");
+            Console.WriteLine("10. Работа с булевыми значениями.");
+
+            Console.WriteLine("0. Выход из программы.");
+            Console.Write("Введите номер задания: ");
+
+            string choice = Console.ReadLine();
+
+            if (choice == "0")
+            {
+                Console.WriteLine("Завершение работы программы.");
+                break;
+            }
+
+            switch (choice)
+            {
+                case "1":
+                    Console.WriteLine("\n--- Задание 1: Вычисление гипотенузы ---");
+                    Console.Write("Введите длину первого катета (a): ");
+                    if (!double.TryParse(Console.ReadLine(), out double a) || a <= 0)
+                    {
+                        Console.WriteLine("Некорректное значение катета. Введите положительное число.");
+                        break;
+                    }
+                    Console.Write("Введите длину второго катета (b): ");
+                    if (!double.TryParse(Console.ReadLine(), out double b) || b <= 0)
+                    {
+                        Console.WriteLine("Некорректное значение катета. Введите положительное число.");
+                        break;
+                    }
+                    double hypotenuse = CalculateHypotenuse(a, b);
+                    Console.WriteLine($"Гипотенуза c: {hypotenuse:F2}");
+                    break;
+
+                case "2":
+                    Console.WriteLine("\n--- Задание 2: Округление чисел ---");
+                    Console.Write("Введите число для округления: ");
+                    if (!double.TryParse(Console.ReadLine(), out double numToRound))
+                    {
+                        Console.WriteLine("Некорректное число.");
+                        break;
+                    }
+                    DemonstrateRounding(numToRound);
+                    break;
+
+                case "3":
+                    Console.WriteLine("\n--- Задание 3: Тригонометрические функции ---");
+                    Console.Write("Введите угол в градусах: ");
+                    if (!double.TryParse(Console.ReadLine(), out double angleDegrees))
+                    {
+                        Console.WriteLine("Некорректное значение угла.");
+                        break;
+                    }
+                    CalculateTrigonometricFunctions(angleDegrees);
+                    break;
+
+                case "4":
+                    Console.WriteLine("\n--- Задание 4: Генератор случайных чисел ---");
+                    Console.WriteLine("Генерация 10 случайных чисел в диапазоне от 1 до 100:");
+                    GenerateRandomNumbers(10, 1, 100);
+                    break;
+
+                case "5":
+                    Console.WriteLine("\n--- Задание 5: Минимум и максимум в массиве чисел ---");
+                    Console.Write("Введите числа, разделенные пробелами (например, 10.5 20 5.1 -3.2): ");
+                    string numbersInput = Console.ReadLine();
+                    double[] numbersArray = ParseDoubleArray(numbersInput);
+
+                    if (numbersArray == null || numbersArray.Length == 0)
+                    {
+                        Console.WriteLine("Некорректный ввод или массив пуст.");
+                        break;
+                    }
+
+                    (double min, double max) = FindMinMax(numbersArray);
+                    Console.WriteLine($"Минимальное значение: {min}");
+                    Console.WriteLine($"Максимальное значение: {max}");
+                    break;
+
+                case "6":
+                    Console.WriteLine("\n--- Задание 6: Конвертация строки в число (с обработкой ошибок) ---");
+                    ConvertStringToInt();
+                    break;
+
+                case "7":
+                    Console.WriteLine("\n--- Задание 7: Преобразование числа в двоичную строку ---");
+                    Console.Write("Введите целое число: ");
+                    if (!int.TryParse(Console.ReadLine(), out int intToConvert))
+                    {
+                        Console.WriteLine("Некорректное целое число.");
+                        break;
+                    }
+                    string binaryString = ConvertIntToBinaryString(intToConvert);
+                    Console.WriteLine($"Десятичное {intToConvert} в двоичном: {binaryString}");
+                    break;
+
+                case "8":
+                    Console.WriteLine("\n--- Задание 8: Конвертация строки в DateTime ---");
+                    ConvertStringToDateTime();
+                    break;
+
+                case "9":
+                    Console.WriteLine("\n--- Задание 9: Изменение типа данных (object в double) ---");
+                    Console.WriteLine("Будут продемонстрированы 3 примера:");
+                    Console.WriteLine("1. Преобразование int (object):");
+                    ConvertObjectToDouble(123);
+                    Console.WriteLine("2. Преобразование string \"45.67\" (object):");
+                    ConvertObjectToDouble("45.67");
+                    Console.WriteLine("3. Преобразование null (object):");
+                    ConvertObjectToDouble(null);
+                    break;
+
+                case "10":
+                    Console.WriteLine("\n--- Задание 10: Работа с булевыми значениями ---");
+                    ConvertStringsToBool();
+                    break;
+
+                default:
+                    Console.WriteLine("Неверный выбор. Пожалуйста, введите номер задания от 0 до 10.");
+                    break;
+            }
+        }
+    }
+
+    // --- Методы для заданий ---
+
+    /// <summary>
+    /// 1. Вычисление гипотенузы
+    /// Принимает катеты прямоугольного треугольника и возвращает гипотенузу,
+    /// используя Math.Sqrt и Math.Pow.
+    /// </summary>
+    public static double CalculateHypotenuse(double a, double b)
+    {
+   
+        return Math.Sqrt(Math.Pow(a, 2) + Math.Pow(b, 2));
+    }
+
+    /// <summary>
+    /// 2. Округление чисел
+    /// Демонстрирует округление числа до ближайшего целого (Math.Round),
+    /// вверх (Math.Ceiling) и вниз (Math.Floor).
+    /// </summary>
+    public static void DemonstrateRounding(double number)
+    {
+        Console.WriteLine($"Исходное число: {number}");
+        Console.WriteLine($"Округление до ближайшего целого (Math.Round): {Math.Round(number)}");
+        Console.WriteLine($"Округление вверх (Math.Ceiling): {Math.Ceiling(number)}");
+        Console.WriteLine($"Округление вниз (Math.Floor): {Math.Floor(number)}");
+    }
+
+    /// <summary>
+    /// 3. Тригонометрические функции
+    /// Вычисляет синус, косинус и тангенс угла (в градусах),
+    /// преобразуя его в радианы (Math.PI).
+    /// </summary>
+    public static void CalculateTrigonometricFunctions(double angleDegrees)
+    {
+       
+        double angleRadians = angleDegrees * (Math.PI / 180.0);
+
+        Console.WriteLine($"Угол в градусах: {angleDegrees}");
+        Console.WriteLine($"Угол в радианах: {angleRadians:F4}");
+        Console.WriteLine($"Синус: {Math.Sin(angleRadians):F4}");
+        Console.WriteLine($"Косинус: {Math.Cos(angleRadians):F4}");
+
+        double tan = Math.Tan(angleRadians);
+        if (double.IsInfinity(tan) || double.IsNaN(tan))
+        {
+            Console.WriteLine("Тангенс: Неопределен (угол близок к 90 или 270 градусам)");
+        }
+        else
+        {
+            Console.WriteLine($"Тангенс: {tan:F4}");
+        }
+    }
+
+    /// <summary>
+    /// 4. Генератор случайных чисел
+    /// Использует System.Random для генерации 10 случайных чисел в диапазоне от 1 до 100.
+    /// (Важно: Math.Random в C# нет, используется System.Random)
+    /// </summary>
+    public static void GenerateRandomNumbers(int count, int min, int max)
+    {
+        Console.WriteLine($"Генерируется {count} случайных чисел от {min} до {max}:");
+        for (int i = 0; i < count; i++)
+        {
+            Console.WriteLine($"- {_random.Next(min, max + 1)}");
+        }
+    }
+
+    /// <summary>
+    /// Вспомогательный метод для парсинга массива double из строки.
+    /// </summary>
+    private static double[] ParseDoubleArray(string input)
+    {
+        if (string.IsNullOrWhiteSpace(input))
+        {
+            return null;
+        }
+        return input.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(s =>
+                    {
+                        if (double.TryParse(s, out double value))
+                        {
+                            return value;
+                        }
+                        return double.NaN;
+                    })
+                    .Where(d => !double.IsNaN(d)) 
+                    .ToArray();
+    }
+
+    /// <summary>
+    /// 5. Минимум и максимум
+    /// Принимает массив чисел и возвращает минимальное (Math.Min)
+    /// и максимальное (Math.Max) значение.
+    /// </summary>
+    public static (double min, double max) FindMinMax(double[] numbers)
+    {
+        if (numbers == null || numbers.Length == 0)
+        {
+            throw new ArgumentException("Массив не может быть пустым или null.");
+        }
+
+        double minVal = numbers[0];
+        double maxVal = numbers[0];
+
+        for (int i = 1; i < numbers.Length; i++)
+        {
+            minVal = Math.Min(minVal, numbers[i]);
+            maxVal = Math.Max(maxVal, numbers[i]);
+        }
+        return (minVal, maxVal);
+    }
+
+    /// <summary>
+    /// 6. Конвертация строки в число
+    /// Запрашивает у пользователя строку и пытается преобразовать её в int
+    /// с помощью Convert.ToInt32. Обрабатывает исключение FormatException.
+    /// </summary>
+    public static void ConvertStringToInt()
+    {
+        Console.Write("Введите строку для преобразования в целое число: ");
+        string inputString = Console.ReadLine();
+        try
+        {
+            int number = Convert.ToInt32(inputString);
+            Console.WriteLine($"Строка '{inputString}' успешно преобразована в число: {number}");
+        }
+        catch (FormatException)
+        {
+            Console.WriteLine($"Ошибка: Строка '{inputString}' не является корректным форматом для целого числа.");
+        }
+        catch (OverflowException)
+        {
+            Console.WriteLine($"Ошибка: Число '{inputString}' слишком велико или мало для типа int.");
+        }
+        catch (Exception ex) 
+        {
+            Console.WriteLine($"Произошла непредвиденная ошибка: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 7. Преобразование числа в двоичную строку
+    /// Принимает целое число и возвращает его двоичное представление
+    /// (Convert.ToString(number, 2)).
+    /// </summary>
+    public static string ConvertIntToBinaryString(int number)
+    {
+        return Convert.ToString(number, 2);
+    }
+
+    /// <summary>
+    /// 8. Конвертация даты
+    /// Преобразует строку (например, "2025-05-26") в DateTime
+    /// с помощью Convert.ToDateTime.
+    /// </summary>
+    public static void ConvertStringToDateTime()
+    {
+        Console.Write("Введите строку с датой (например, \"2025-05-26\", \"26.05.2025\"): ");
+        string dateString = Console.ReadLine();
+        try
+        {
+            DateTime date = Convert.ToDateTime(dateString);
+            Console.WriteLine($"Строка '{dateString}' успешно преобразована в дату: {date.ToShortDateString()}");
+        }
+        catch (FormatException)
+        {
+            Console.WriteLine($"Ошибка: Строка '{dateString}' не является корректным форматом даты.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Произошла непредвиденная ошибка: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 9. Изменение типа данных
+    /// Принимает object и пытается преобразовать его в double
+    /// с помощью Convert.ToDouble.
+    /// </summary>
+    public static void ConvertObjectToDouble(object obj)
+    {
+        Console.Write($"Преобразуем '{obj ?? "null"}' (тип: {obj?.GetType().Name ?? "null"}) в double: ");
+        try
+        {
+            double result = Convert.ToDouble(obj);
+            Console.WriteLine($"Успешно: {result}");
+        }
+        catch (InvalidCastException)
+        {
+            Console.WriteLine("Ошибка: Невозможно преобразовать данный тип в double.");
+        }
+        catch (FormatException)
+        {
+            Console.WriteLine("Ошибка: Строка не является корректным числовым форматом.");
+        }
+        catch (ArgumentNullException)
+        {
+          
+            Console.WriteLine("Ошибка: Переданное значение null не может быть преобразовано в double напрямую.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Произошла непредвиденная ошибка: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 10. Работа с булевыми значениями
+    /// Преобразует строки "True", "False", "1", "0" и другие в bool
+    /// с помощью Convert.ToBoolean.
+    /// </summary>
+    public static void ConvertStringsToBool()
+    {
+        string[] testStrings = { "True", "False", "1", "0", "true", "false", "TRUE", "FALSE", "any_other_text", "2", "-1", " " };
+
+        Console.WriteLine("Демонстрация Convert.ToBoolean:");
+        foreach (string s in testStrings)
+        {
+            try
+            {
+                bool result = Convert.ToBoolean(s);
+                Console.WriteLine($"Строка '{s}' преобразована в bool: {result}");
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine($"Ошибка: Строка '{s}' не может быть преобразована в bool.");
+            }
+        }
+    }
+}
+
+
 Делали эту практику 14 :Козин Андрей(Ип-21),Мелик Вартанов(Ип-21),Рябченко Тимофей(Ип-21) 
